@@ -1,3 +1,5 @@
+## there are afew screenshots of virtual computer that i ran this code on it and visualize dataset and poll out insights of data.
+
 # Import required libraries
 import pandas as pd
 import dash

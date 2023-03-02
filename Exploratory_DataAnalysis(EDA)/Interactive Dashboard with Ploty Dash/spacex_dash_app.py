@@ -20,8 +20,7 @@ app = dash.Dash(__name__)
 app.layout = html.Div(children=[html.H1('SpaceX Launch Records Dashboard',
                                         style={'textAlign': 'center', 'color': '#503D36',
                                                'font-size': 40}),
-                                # TASK 1: Add a dropdown list to enable Launch Site selection
-                                # The default select value is for ALL sites
+                                # TASK 1
                                 dcc.Dropdown(id='site-dropdown',
                                 options=[{'label':'All Sites', 'value':'All'},
                                 {'label':'CCAFS LC-40', 'value':'CCAFS LC-40'},
@@ -32,8 +31,7 @@ app.layout = html.Div(children=[html.H1('SpaceX Launch Records Dashboard',
                                 value='All', style={'textAlign':'center'}),
                                 html.Br(),
 
-                                # TASK 2: Add a pie chart to show the total successful launches count for all sites
-                                # If a specific launch site was selected, show the Success vs. Failed counts for the site
+                                # TASK 2
                                 html.Div(dcc.Graph(id='success-pie-chart')),
                                 html.Br(),
 
@@ -59,16 +57,20 @@ app.layout = html.Div(children=[html.H1('SpaceX Launch Records Dashboard',
 def pie_chart(cSite):
     filtered_df = spacex_df
     if cSite == 'All':
-        fig = px.pie(filtered_df, values='class', 
+        filtered_df = filtered_df[['Launch Site', 'class']]
+        filtered_df.columns = ['Launch Site', 'Success Launch']
+        fig = px.pie(filtered_df, values='Success Launch', 
         names='Launch Site', 
-        title='Success Rate')
+        title='Total Success Launches by Site')
         return fig
     else:
         filtered_df = filtered_df[filtered_df['Launch Site'] == cSite]
+        filtered_df = filtered_df[['Launch Site', 'class']]
         filtered_df = filtered_df.groupby('class', as_index=False).count()
-        fig = px.pie(filtered_df, values='Launch Site', 
+        filtered_df.columns = ['class', 'count']
+        fig = px.pie(filtered_df, values='count', 
         names='class', 
-        title='Success Rate')
+        title=f'Total Success Launches for site {cSite}')
         return fig 
 # # TASK 4:
 # Add a callback function for `site-dropdown` and `payload-slider` as inputs, `success-payload-scatter-chart` as output
@@ -79,20 +81,22 @@ def scatter_chart(site, rangeval):
     low, high = rangeval
     if site == 'All':
         dfs = spacex_df[['Booster Version Category','Payload Mass (kg)','class']]
-        dfs = dfs[(dfs['Payload Mass (kg)']>=low) & (dfs['Payload Mass (kg)']<=high)]
+        dfs = dfs[(dfs['Payload Mass (kg)']>low) & (dfs['Payload Mass (kg)']<=high)]
         dfs = dfs.groupby(['Booster Version Category','Payload Mass (kg)'], as_index=False).mean()
         fg = px.scatter(data_frame=dfs, 
         x='Payload Mass (kg)', y='class', 
-        color='Booster Version Category')
+        color='Booster Version Category',
+        title='Correlation between Payload and Success for all Sites')
         return fg
     else:
         dfs = spacex_df[spacex_df['Launch Site'] == site]
         dfs = dfs[['Booster Version Category','Payload Mass (kg)','class']]
-        dfs = dfs[(dfs['Payload Mass (kg)']>=low) & (dfs['Payload Mass (kg)']<=high)]
+        dfs = dfs[(dfs['Payload Mass (kg)']>low) & (dfs['Payload Mass (kg)']<=high)]
         dfs = dfs.groupby(['Booster Version Category','Payload Mass (kg)'], as_index=False).mean()
         fg = px.scatter(data_frame=dfs, 
         x='Payload Mass (kg)', y='class', 
-        color='Booster Version Category')
+        color='Booster Version Category',
+        title = f'Correlation between Payload and Success for site {site}')
         return fg
 
 # Run the app

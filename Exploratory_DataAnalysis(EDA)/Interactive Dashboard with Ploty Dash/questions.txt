@@ -1,0 +1,7 @@
+
+    Which site has the largest successful launches?
+    Which site has the highest launch success rate?
+    Which payload range(s) has the highest launch success rate?
+    Which payload range(s) has the lowest launch success rate?
+    Which F9 Booster version (v1.0, v1.1, FT, B4, B5, etc.) has the highest
+    launch success rate?

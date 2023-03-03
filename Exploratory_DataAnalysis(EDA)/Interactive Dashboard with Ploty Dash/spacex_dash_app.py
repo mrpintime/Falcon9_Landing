@@ -1,5 +1,5 @@
-## there are afew screenshots of virtual computer that i ran this code on it and visualize dataset and poll out insights of data.
-
+## there are a few screenshots of virtual computer that i ran this code on it and visualize dataset and pull out insights of data.
+# we answered some question with visualization that you can see that questions and related screenshots in pictures folder 
 # Import required libraries
 import pandas as pd
 import dash
